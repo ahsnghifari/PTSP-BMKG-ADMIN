@@ -4,10 +4,16 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { database } from "@/lib/firebaseConfig";
 
 if (!admin.apps.length) {
+  const serviceAccountEnv = process.env.FIREBASE_SERVICE_ACCOUNT;
+
+  if (!serviceAccountEnv) {
+    throw new Error(
+      "Variabel lingkungan FIREBASE_SERVICE_ACCOUNT tidak ditemukan. Pastikan telah ditambahkan di Vercel."
+    );
+  }
+
   const serviceAccount = JSON.parse(
-    Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, "base64").toString(
-      "utf-8"
-    )
+    Buffer.from(serviceAccountEnv, "base64").toString("utf-8")
   );
 
   admin.initializeApp({
