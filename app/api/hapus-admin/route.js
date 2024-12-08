@@ -12,9 +12,14 @@ if (!admin.apps.length) {
     );
   }
 
-  const serviceAccount = JSON.parse(
-    Buffer.from(serviceAccountEnv, "base64").toString("utf-8")
-  );
+  let serviceAccount;
+  try {
+    serviceAccount = JSON.parse(
+      Buffer.from(serviceAccountEnv, "base64").toString("utf-8")
+    );
+  } catch (error) {
+    throw new Error("Gagal mendekode serviceAccount JSON: " + error.message);
+  }
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
